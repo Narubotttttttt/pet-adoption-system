@@ -21,7 +21,7 @@
                         Dashboard
                     </a>
                    
-                    <a href="#" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
+                    <a href="{{ route('pets.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
                         <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-lg group-hover:bg-[#199CA4]/10 transition-colors">
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-[#199CA4] transition-colors" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 14c-1.66 0-3 1.34-3 3 0 2 2 3.5 3 3.5s3-1.5 3-3.5c0-1.66-1.34-3-3-3zm-4.5-2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm9 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-12.25 5c.69 0 1.25-.56 1.25-1.25v-1.5c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25 1.25v1.5c0 .69.56 1.25 1.25 1.25zm15.5 0c.69 0 1.25-.56 1.25-1.25v-1.5c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25 1.25v1.5c0 .69.56 1.25 1.25 1.25z"/>
@@ -77,7 +77,7 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Pets</p>
-                                <p class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalPets ?? 0 }}</p>
                                 <p class="text-xs text-gray-400 mt-2">Active in system</p>
                             </div>
                             <div class="bg-[#199CA4]/10 p-3 rounded-xl text-[#199CA4]">
@@ -118,18 +118,22 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-[#333634] to-[#199CA4] rounded-xl shadow-sm p-6 text-white">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-teal-100 text-xs font-semibold uppercase tracking-wider">Growth</p>
-                                <p class="text-3xl font-bold mt-2">100%</p>
-                                <p class="text-xs text-teal-200 mt-2">Year over year</p>
-                            </div>
-                            <div class="bg-white/20 p-3 rounded-xl text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                </svg>
-                            </div>
+                    <div class="bg-teal-900 text-white p-6 rounded-2xl shadow-sm flex justify-between items-start">
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-teal-200">Latest Pet</p>
+
+                            @if($latestPet)
+                                <h3 class="text-3xl font-bold my-1 text-white">{{ $latestPet->name }}</h3>
+                                <p class="text-xs text-teal-300">Added {{ $latestPet->created_at->diffForHumans() }}</p>
+                            @else
+                                <h3 class="text-3xl font-bold my-1 text-white">No Pets Yet</h3>
+                                <p class="text-xs text-teal-300">Add a pet to see the latest entry</p>
+                            @endif
+                        </div>
+                        <div class="p-3 bg-teal-800 rounded-xl text-teal-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                         </div>
                     </div>
 

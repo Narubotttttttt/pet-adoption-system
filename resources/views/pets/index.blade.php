@@ -1,0 +1,64 @@
+<x-app-layout>
+    <div class="max-w-7xl mx-auto py-10 px-4">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-[#333634]">Pets</h1>
+                <p class="text-sm text-gray-500 mt-1">All pet profiles added to the system.</p>
+            </div>
+            <a href="{{ route('pets.create') }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#199CA4] text-white text-sm font-semibold shadow-sm hover:bg-[#13787F] transition">
+                + Add New Pet
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-lg font-bold text-[#333634]">Added Pets</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Pet</th>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Breed</th>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Color</th>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Added</th>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($pets as $pet)
+                            <tr class="hover:bg-gray-50/80 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl bg-[#199CA4]/10 overflow-hidden flex items-center justify-center">
+                                            @if($pet->photo_path)
+                                                <img src="{{ asset('storage/'.$pet->photo_path) }}" alt="{{ $pet->name }}" class="w-full h-full object-cover">
+                                            @else
+                                                <span class="text-base">🐾</span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-gray-900">{{ $pet->name }}</p>
+                                            <p class="text-xs text-gray-400">{{ ucfirst($pet->gender ?? 'Unknown') }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $pet->breed ?? '—' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $pet->color ?? '—' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $pet->created_at->diffForHumans() }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ucfirst($pet->type ?? 'Unknown') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500">
+                                    No pets have been added yet. Use the button above to add your first pet.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

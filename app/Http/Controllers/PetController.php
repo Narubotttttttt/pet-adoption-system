@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pet;
 
 class PetController extends Controller
 {
     public function create()
     {
         return view('pets.create');
+    }
+
+    public function index()
+    {
+        $pets = Pet::latest('created_at')->get();
+
+        return view('pets.index', [
+            'pets' => $pets,
+        ]);
     }
 
     public function store(Request $request)
@@ -23,10 +33,19 @@ class PetController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('pets', 'public');
+            $data['photo_path'] = $request->file('photo')->store('pets', 'public');
         }
 
-        // Persisting is not implemented yet. Flash a success message for now.
+        // Save to database
+        Pet::create([
+            'name' => $data['name'],
+            'breed' => $data['breed'],
+            'color' => $data['color'],
+            'gender' => $data['gender'],
+            'type' => $data['type'],
+            'photo_path' => $data['photo_path'] ?? null,
+        ]);
+
         session()->flash('success', 'Pet added successfully.');
 
         return redirect()->route('dashboard');
