@@ -18,6 +18,7 @@ class Pet extends Model
         'age',
         'medical_history',
         'temperament',
+        'description',
         'photo_path',
         'status',
     ];

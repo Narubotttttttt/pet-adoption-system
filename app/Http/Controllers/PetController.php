@@ -47,10 +47,20 @@ class PetController extends Controller
             'gender' => 'required|in:male,female',
             'type' => 'required|in:dog,cat',
             'age' => 'nullable|string|max:50',
-            'medical_history' => 'nullable|string',
+            'medical_history' => 'nullable',
             'temperament' => 'nullable|string',
+            'description' => 'nullable|string',
             'photo' => 'required|image|max:2048',
         ]);
+
+        $medicalHistory = $request->input('medical_history');
+        if (is_array($medicalHistory)) {
+            $medicalHistory = implode(', ', array_values(array_filter($medicalHistory, fn ($value) => is_string($value) && trim($value) !== '')));
+        } elseif (is_string($medicalHistory)) {
+            $medicalHistory = trim($medicalHistory);
+        }
+
+        $data['medical_history'] = $medicalHistory ?? null;
 
         if ($request->hasFile('photo')) {
             $data['photo_path'] = $request->file('photo')->store('pets', 'public');
@@ -65,6 +75,7 @@ class PetController extends Controller
             'age' => $data['age'] ?? null,
             'medical_history' => $data['medical_history'] ?? null,
             'temperament' => $data['temperament'] ?? null,
+            'description' => $data['description'] ?? null,
             'photo_path' => $data['photo_path'] ?? null,
             'status' => 'available',
         ]);
@@ -97,11 +108,21 @@ class PetController extends Controller
             'gender' => 'required|in:male,female',
             'type' => 'required|in:dog,cat',
             'age' => 'nullable|string|max:50',
-            'medical_history' => 'nullable|string',
+            'medical_history' => 'nullable',
             'temperament' => 'nullable|string',
+            'description' => 'nullable|string',
             'status' => ['required', 'in:available,pending,adopted'],
             'photo' => 'nullable|image|max:2048',
         ]);
+
+        $medicalHistory = $request->input('medical_history');
+        if (is_array($medicalHistory)) {
+            $medicalHistory = implode(', ', array_values(array_filter($medicalHistory, fn ($value) => is_string($value) && trim($value) !== '')));
+        } elseif (is_string($medicalHistory)) {
+            $medicalHistory = trim($medicalHistory);
+        }
+
+        $data['medical_history'] = $medicalHistory ?? null;
 
         if ($request->hasFile('photo')) {
             if ($pet->photo_path && Storage::disk('public')->exists($pet->photo_path)) {
@@ -120,6 +141,7 @@ class PetController extends Controller
             'age' => $data['age'] ?? null,
             'medical_history' => $data['medical_history'] ?? null,
             'temperament' => $data['temperament'] ?? null,
+            'description' => $data['description'] ?? null,
             'status' => $data['status'],
             'photo_path' => $data['photo_path'] ?? $pet->photo_path,
         ]);

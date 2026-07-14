@@ -42,6 +42,7 @@
                         <p><strong class="text-gray-700">Age:</strong> <span class="text-gray-600">{{ $pet->age ?? '—' }}</span></p>
                         <p><strong class="text-gray-700">Medical history:</strong> <span class="text-gray-600">{{ $pet->medical_history ?? 'Not provided' }}</span></p>
                         <p><strong class="text-gray-700">Temperament:</strong> <span class="text-gray-600">{{ $pet->temperament ?? 'Not provided' }}</span></p>
+                        <p><strong class="text-gray-700">Description:</strong> <span class="text-gray-600">{{ $pet->description ?? 'Not provided' }}</span></p>
                         <p><strong class="text-gray-700">Added:</strong> <span class="text-gray-600">{{ $pet->created_at->diffForHumans() }}</span></p>
                     </div>
                 </div>

@@ -64,16 +64,40 @@
     </div>
 </div>
 
+@php
+    $selectedMedicalHistory = old('medical_history', optional($pet)->medical_history);
+    if (is_string($selectedMedicalHistory)) {
+        $selectedMedicalHistory = array_values(array_filter(array_map('trim', explode(',', $selectedMedicalHistory))));
+    } elseif (!is_array($selectedMedicalHistory)) {
+        $selectedMedicalHistory = [];
+    }
+@endphp
+
 <div class="mb-8">
     <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Medical Background</label>
-    <textarea name="medical_history" rows="4"
-        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#199CA4] focus:ring-4 focus:ring-[#199CA4]/10 transition outline-none shadow-sm text-gray-800">{{ old('medical_history', optional($pet)->medical_history) }}</textarea>
+    <p class="text-sm text-gray-500 mb-3">Choose the options that best describe the pet's health history.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl border border-gray-200 p-4 bg-gray-50/50">
+        @php $medicalOptions = ['Vaccinated', 'Spayed/Neutered', 'Dewormed', 'Microchipped', 'Flea & Tick Treated', 'Healthy', 'Needs Observation']; @endphp
+        @foreach($medicalOptions as $option)
+            <label class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700">
+                <input type="checkbox" name="medical_history[]" value="{{ $option }}" class="rounded border-gray-300 text-[#199CA4] focus:ring-[#199CA4]" {{ in_array($option, $selectedMedicalHistory, true) ? 'checked' : '' }}>
+                <span>{{ $option }}</span>
+            </label>
+        @endforeach
+    </div>
 </div>
 
 <div class="mb-8">
     <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Temperament</label>
     <textarea name="temperament" rows="4"
         class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#199CA4] focus:ring-4 focus:ring-[#199CA4]/10 transition outline-none shadow-sm text-gray-800">{{ old('temperament', optional($pet)->temperament) }}</textarea>
+</div>
+
+<div class="mb-8">
+    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Pet Description</label>
+    <textarea name="description" rows="4"
+        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#199CA4] focus:ring-4 focus:ring-[#199CA4]/10 transition outline-none shadow-sm text-gray-800">{{ old('description', optional($pet)->description) }}</textarea>
+    <p class="text-xs text-gray-500 mt-2">Add a short summary that adopters can read.</p>
 </div>
 
 <div class="mb-8">
