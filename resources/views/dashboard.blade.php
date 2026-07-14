@@ -45,7 +45,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 10-8 0v4M5 11h14v10H5V11z"></path>
                             </svg>
                         </span>
-                        <span class="font-medium">Users</span>
+                        <span class="font-medium">Adopters</span>
                     </a>
                 </nav>
                 <a href="#" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
@@ -139,33 +139,13 @@
 
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <h2 class="text-lg font-bold text-[#333634] mb-4">Adoption Trends</h2>
-                        <div class="h-64 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex items-center justify-center">
+                        <div class="h-80 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex items-center justify-center">
                             <p class="text-sm text-gray-400 font-medium">Chart visualization placeholder</p>
                         </div>
                     </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h2 class="text-lg font-bold text-[#333634] mb-4">Quick Actions</h2>
-                        <div class="space-y-2.5">
-                            <a href="{{ route('pets.create') }}" class="block text-center w-full px-4 py-3 bg-[#199CA4] hover:bg-[#13787F] text-white rounded-xl transition-colors font-semibold text-sm shadow-sm">
-                                + Add New Pet
-                            </a>
-                            <a href="#" class="block text-center w-full px-4 py-3 bg-[#199CA4]/10 hover:bg-[#199CA4]/20 text-[#199CA4] rounded-xl transition-colors font-medium text-sm">
-                                View Adoptions
-                            </a>
-                            <a href="#" class="block text-center w-full px-4 py-3 bg-[#199CA4]/10 hover:bg-[#199CA4]/20 text-[#199CA4] rounded-xl transition-colors font-medium text-sm">
-                                Manage Users
-                            </a>
-                            <a href="#" class="block text-center w-full px-4 py-3 bg-[#199CA4]/10 hover:bg-[#199CA4]/20 text-[#199CA4] rounded-xl transition-colors font-medium text-sm">
-                                Reports
-                            </a>
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -198,7 +178,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">—</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <span class="inline-flex px-2.5 py-1 bg-yellow-50 text-yellow-700 rounded-full text-xs font-semibold border border-yellow-100">
-                                            Pending
+                                            
                                         </span>
                                     </td>
                                 </tr>

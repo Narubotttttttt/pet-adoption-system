@@ -14,10 +14,25 @@ class PetController extends Controller
 
     public function index()
     {
-        $pets = Pet::latest('created_at')->get();
+        // server-side search and pagination
+        $q = request()->input('q');
+
+        $query = Pet::query();
+
+        if ($q) {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('breed', 'like', "%{$q}%")
+                    ->orWhere('color', 'like', "%{$q}%")
+                    ->orWhere('type', 'like', "%{$q}%");
+            });
+        }
+
+        $pets = $query->latest('created_at')->paginate(10)->withQueryString();
 
         return view('pets.index', [
             'pets' => $pets,
+            'q' => $q,
         ]);
     }
 

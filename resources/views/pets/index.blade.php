@@ -5,9 +5,15 @@
                 <h1 class="text-2xl font-bold text-[#333634]">Pets</h1>
                 <p class="text-sm text-gray-500 mt-1">All pet profiles added to the system.</p>
             </div>
-            <a href="{{ route('pets.create') }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#199CA4] text-white text-sm font-semibold shadow-sm hover:bg-[#13787F] transition">
-                + Add New Pet
-            </a>
+            <div class="flex items-center gap-3">
+                <form method="GET" action="{{ route('pets.index') }}" class="flex items-center gap-2">
+                    <input name="q" value="{{ old('q', request('q')) }}" placeholder="Search pets by name, breed, color..." class="px-3 py-2 border rounded-xl text-sm w-56 focus:outline-none focus:ring-2 focus:ring-[#199CA4]/30" />
+                    <button type="submit" class="px-3 py-2 bg-[#199CA4] text-white rounded-xl text-sm">Search</button>
+                </form>
+                <a href="{{ route('pets.create') }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#199CA4] text-white text-sm font-semibold shadow-sm hover:bg-[#13787F] transition">
+                    + Add New Pet
+                </a>
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -58,6 +64,14 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">Showing {{ $pets->firstItem() ?? 0 }} to {{ $pets->lastItem() ?? 0 }} of {{ $pets->total() }} pets</p>
+                    <div>
+                        {{ $pets->links() }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
