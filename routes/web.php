@@ -2,34 +2,50 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\UserController;
 use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard', [
-        'totalPets' => Pet::count(),
-        'latestPet' => Pet::latest('created_at')->first(),
-    ]);
-})->middleware(['auth', 'verified', 'admin'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/pets', [PetController::class, 'index'])->name('pets.index');
+    Route::get('/pets/{pet}/apply', [\App\Http\Controllers\AdoptionApplicationController::class, 'create'])->name('adoption-applications.create')->whereNumber('pet');
+    Route::post('/pets/{pet}/apply', [\App\Http\Controllers\AdoptionApplicationController::class, 'store'])->name('adoption-applications.store')->whereNumber('pet');
+    Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show')->whereNumber('pet');
+});
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'staff'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard', [
+            'totalPets' => Pet::count(),
+            'totalUsers' => User::whereIn('role', ['admin', 'staff'])->count(),
+            'latestPet' => Pet::latest('created_at')->first(),
+        ]);
+    })->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    // Pet management (list, create form + store)
-    Route::get('/pets', [PetController::class, 'index'])->name('pets.index');
-    Route::get('/pets/create', [PetController::class, 'create'])->middleware(['verified'])->name('pets.create');
+
+    Route::get('/pets/create', [PetController::class, 'create'])->name('pets.create');
     Route::post('/pets', [PetController::class, 'store'])->name('pets.store');
-    // CRUD routes for pets
-    Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show');
     Route::get('/pets/{pet}/edit', [PetController::class, 'edit'])->name('pets.edit');
     Route::match(['put','patch'],'/pets/{pet}', [PetController::class, 'update'])->name('pets.update');
     Route::delete('/pets/{pet}', [PetController::class, 'destroy'])->name('pets.destroy');
+
+    Route::get('/adoption-applications', [\App\Http\Controllers\AdoptionApplicationController::class, 'index'])->name('adoption-applications.index');
+    Route::get('/adoption-applications/{application}', [\App\Http\Controllers\AdoptionApplicationController::class, 'show'])->name('adoption-applications.show');
+    Route::patch('/adoption-applications/{application}', [\App\Http\Controllers\AdoptionApplicationController::class, 'update'])->name('adoption-applications.update');
+
+    Route::get('/adopters', [\App\Http\Controllers\AdopterProfileController::class, 'index'])->name('adopters.index');
+});
+
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
 
 require __DIR__.'/auth.php';

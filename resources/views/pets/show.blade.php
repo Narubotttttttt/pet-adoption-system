@@ -1,13 +1,24 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto py-10 px-4">
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
                 <div>
                     <h1 class="text-2xl font-bold">{{ $pet->name }}</h1>
                     <p class="text-sm text-gray-500">{{ ucfirst($pet->type ?? 'Unknown') }} • {{ $pet->breed ?? '—' }}</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('pets.edit', $pet) }}" class="px-4 py-2 bg-[#199CA4] text-white rounded-xl text-sm">Edit</a>
+                <div class="flex flex-wrap items-center gap-2">
+                    @if(in_array(Auth::user()->role, ['admin', 'staff']))
+                        <a href="{{ route('pets.edit', $pet) }}" class="px-4 py-2 bg-[#199CA4] text-white rounded-xl text-sm">Edit</a>
+                    @endif
+
+                    @unless(in_array(Auth::user()->role, ['admin', 'staff']))
+                        @if($pet->status === 'available')
+                            <a href="{{ route('adoption-applications.create', $pet) }}" class="px-4 py-2 bg-green-600 text-white rounded-xl text-sm hover:bg-green-700 transition">Apply to adopt</a>
+                        @else
+                            <span class="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm">{{ ucfirst(str_replace('_', ' ', $pet->status)) }}</span>
+                        @endif
+                    @endunless
+
                     <a href="{{ route('pets.index') }}" class="px-4 py-2 border rounded-xl text-sm">Back</a>
                 </div>
             </div>
@@ -27,6 +38,10 @@
                         <p><strong class="text-gray-700">Breed:</strong> <span class="text-gray-600">{{ $pet->breed ?? '—' }}</span></p>
                         <p><strong class="text-gray-700">Color:</strong> <span class="text-gray-600">{{ $pet->color ?? '—' }}</span></p>
                         <p><strong class="text-gray-700">Gender:</strong> <span class="text-gray-600">{{ ucfirst($pet->gender ?? '—') }}</span></p>
+                        <p><strong class="text-gray-700">Status:</strong> <span class="text-gray-600">{{ ucfirst(str_replace('_', ' ', $pet->status ?? 'available')) }}</span></p>
+                        <p><strong class="text-gray-700">Age:</strong> <span class="text-gray-600">{{ $pet->age ?? '—' }}</span></p>
+                        <p><strong class="text-gray-700">Medical history:</strong> <span class="text-gray-600">{{ $pet->medical_history ?? 'Not provided' }}</span></p>
+                        <p><strong class="text-gray-700">Temperament:</strong> <span class="text-gray-600">{{ $pet->temperament ?? 'Not provided' }}</span></p>
                         <p><strong class="text-gray-700">Added:</strong> <span class="text-gray-600">{{ $pet->created_at->diffForHumans() }}</span></p>
                     </div>
                 </div>

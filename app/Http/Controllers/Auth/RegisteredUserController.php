@@ -20,7 +20,31 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $adminExists = User::where('role', 'admin')->exists();
+
+        if (! auth()->check()) {
+            if ($adminExists) {
+                abort(403, 'Unauthorized');
+            }
+
+            return view('auth.register', [
+                'pageTitle' => 'Create Admin Account',
+                'pageSubtitle' => 'Set up the first admin account for the dashboard.',
+                'showRoleSelect' => false,
+                'registerRole' => 'admin',
+            ]);
+        }
+
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
+        return view('auth.register', [
+            'pageTitle' => 'Create Staff Account',
+            'pageSubtitle' => 'Add a new staff user for the dashboard.',
+            'showRoleSelect' => false,
+            'registerRole' => 'staff',
+        ]);
     }
 
     /**
@@ -30,6 +54,20 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $adminExists = User::where('role', 'admin')->exists();
+
+        if (! auth()->check()) {
+            if ($adminExists) {
+                abort(403, 'Unauthorized');
+            }
+            $role = 'admin';
+        } else {
+            if (auth()->user()->role !== 'admin') {
+                abort(403, 'Unauthorized');
+            }
+            $role = 'staff';
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -40,11 +78,10 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $role,
         ]);
 
         event(new Registered($user));
-
-        Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
     }

@@ -10,9 +10,11 @@
                     <input name="q" value="{{ old('q', request('q')) }}" placeholder="Search pets by name, breed, color..." class="px-3 py-2 border rounded-xl text-sm w-56 focus:outline-none focus:ring-2 focus:ring-[#199CA4]/30" />
                     <button type="submit" class="px-3 py-2 bg-[#199CA4] text-white rounded-xl text-sm">Search</button>
                 </form>
-                <a href="{{ route('pets.create') }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#199CA4] text-white text-sm font-semibold shadow-sm hover:bg-[#13787F] transition">
-                    + Add New Pet
-                </a>
+                @if(in_array(Auth::user()->role, ['admin', 'staff']))
+                    <a href="{{ route('pets.create') }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#199CA4] text-white text-sm font-semibold shadow-sm hover:bg-[#13787F] transition">
+                        + Add New Pet
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -58,12 +60,14 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="inline-flex items-center gap-2">
                                         <a href="{{ route('pets.show', $pet) }}" class="text-sm text-[#199CA4] font-medium">View</a>
-                                        <a href="{{ route('pets.edit', $pet) }}" class="text-sm text-gray-600 hover:text-[#199CA4]">Edit</a>
-                                        <form action="{{ route('pets.destroy', $pet) }}" method="POST" onsubmit="return confirm('Delete this pet?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-sm text-red-600 hover:underline">Delete</button>
-                                        </form>
+                                        @if(in_array(Auth::user()->role, ['admin', 'staff']))
+                                            <a href="{{ route('pets.edit', $pet) }}" class="text-sm text-gray-600 hover:text-[#199CA4]">Edit</a>
+                                            <form action="{{ route('pets.destroy', $pet) }}" method="POST" onsubmit="return confirm('Delete this pet?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-sm text-red-600 hover:underline">Delete</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

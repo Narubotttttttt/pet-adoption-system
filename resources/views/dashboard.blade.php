@@ -30,7 +30,18 @@
                         <span class="font-medium">Pets</span>
                     </a>
 
-                    <a href="#" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('users.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
+                            <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-lg group-hover:bg-[#199CA4]/10 transition-colors">
+                                <svg class="w-5 h-5 text-gray-500 group-hover:text-[#199CA4] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.89 0 5.578.92 7.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 7v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a4 4 0 014-4h6a4 4 0 014 4z" />
+                                </svg>
+                            </span>
+                            <span class="font-medium">User Management</span>
+                        </a>
+                    @endif
+
+                    <a href="{{ route('adoption-applications.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
                         <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-lg group-hover:bg-[#199CA4]/10 transition-colors">
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-[#199CA4] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 6h18M3 14h18M3 18h18"></path>
@@ -39,7 +50,7 @@
                         <span class="font-medium">Adoption Requests</span>
                     </a>
 
-                    <a href="#" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
+                    <a href="{{ route('adopters.index') }}" class="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#199CA4]/5 hover:text-[#199CA4] transition-all">
                         <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-lg group-hover:bg-[#199CA4]/10 transition-colors">
                             <svg class="w-5 h-5 text-gray-500 group-hover:text-[#199CA4] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 10-8 0v4M5 11h14v10H5V11z"></path>
@@ -64,8 +75,12 @@
                 
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-2">
                     <div>
-                        <h1 class="text-2xl font-bold text-[#333634]">Admin Dashboard</h1>
-                        <p class="text-sm text-gray-500 mt-0.5">Welcome back, {{ Auth::user()->name }}</p>
+                        <h1 class="text-2xl font-bold text-[#333634]">
+                            {{ Auth::user()->role === 'admin' ? 'Admin Dashboard' : 'Staff Dashboard' }}
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-0.5">
+                            {{ Auth::user()->role === 'admin' ? 'Welcome back, manager. Control users and system settings from here.' : 'Welcome back, team member. View pets and manage assigned tasks.' }}
+                        </p>
                     </div>
                     <div class="flex items-center gap-3">
                     </div>
@@ -106,9 +121,13 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Total Users</p>
-                                <p class="text-3xl font-bold text-gray-900 mt-2">2</p>
-                                <p class="text-xs text-gray-400 mt-2">Admin accounts</p>
+                                <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">
+                                    {{ Auth::user()->role === 'admin' ? 'Total Users' : 'Assigned Pets' }}
+                                </p>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalUsers ?? 0 }}</p>
+                                <p class="text-xs text-gray-400 mt-2">
+                                    {{ Auth::user()->role === 'admin' ? 'Admin and staff accounts' : 'Your currently managed pet records' }}
+                                </p>
                             </div>
                             <div class="bg-[#199CA4]/10 p-3 rounded-xl text-[#199CA4]">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

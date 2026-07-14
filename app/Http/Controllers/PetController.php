@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pet;
+use App\Models\AdoptionApplication;
 use Illuminate\Support\Facades\Storage;
 
 class PetController extends Controller
@@ -45,6 +46,9 @@ class PetController extends Controller
             'color' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
             'type' => 'required|in:dog,cat',
+            'age' => 'nullable|string|max:50',
+            'medical_history' => 'nullable|string',
+            'temperament' => 'nullable|string',
             'photo' => 'required|image|max:2048',
         ]);
 
@@ -52,14 +56,17 @@ class PetController extends Controller
             $data['photo_path'] = $request->file('photo')->store('pets', 'public');
         }
 
-        // Save to database
         Pet::create([
             'name' => $data['name'],
             'breed' => $data['breed'],
             'color' => $data['color'],
             'gender' => $data['gender'],
             'type' => $data['type'],
+            'age' => $data['age'] ?? null,
+            'medical_history' => $data['medical_history'] ?? null,
+            'temperament' => $data['temperament'] ?? null,
             'photo_path' => $data['photo_path'] ?? null,
+            'status' => 'available',
         ]);
 
         session()->flash('success', 'Pet added successfully.');
@@ -89,11 +96,14 @@ class PetController extends Controller
             'color' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
             'type' => 'required|in:dog,cat',
+            'age' => 'nullable|string|max:50',
+            'medical_history' => 'nullable|string',
+            'temperament' => 'nullable|string',
+            'status' => ['required', 'in:available,pending,adopted'],
             'photo' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
-            // delete old photo when exists
             if ($pet->photo_path && Storage::disk('public')->exists($pet->photo_path)) {
                 Storage::disk('public')->delete($pet->photo_path);
             }
@@ -101,7 +111,18 @@ class PetController extends Controller
             $data['photo_path'] = $request->file('photo')->store('pets', 'public');
         }
 
-        $pet->update($data);
+        $pet->update([ 
+            'name' => $data['name'],
+            'breed' => $data['breed'],
+            'color' => $data['color'],
+            'gender' => $data['gender'],
+            'type' => $data['type'],
+            'age' => $data['age'] ?? null,
+            'medical_history' => $data['medical_history'] ?? null,
+            'temperament' => $data['temperament'] ?? null,
+            'status' => $data['status'],
+            'photo_path' => $data['photo_path'] ?? $pet->photo_path,
+        ]);
 
         session()->flash('success', 'Pet updated successfully.');
 

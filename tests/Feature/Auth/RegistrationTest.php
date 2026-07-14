@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -9,23 +10,32 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered(): void
+    public function test_admin_can_create_staff_account(): void
     {
-        $response = $this->get('/register');
+        $admin = User::factory()->create(['role' => 'admin']);
 
-        $response->assertStatus(200);
-    }
-
-    public function test_new_users_can_register(): void
-    {
-        $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+        $response = $this->actingAs($admin)->post('/register', [
+            'name' => 'Staff Member',
+            'email' => 'staff@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'staff',
         ]);
 
-        $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+        $this->assertDatabaseHas('users', [
+            'email' => 'staff@example.com',
+            'role' => 'staff',
+        ]);
+        $this->assertAuthenticatedAs($admin);
+    }
+
+    public function test_non_admin_cannot_access_registration(): void
+    {
+        $user = User::factory()->create(['role' => 'staff']);
+
+        $response = $this->actingAs($user)->get('/register');
+
+        $response->assertStatus(403);
     }
 }

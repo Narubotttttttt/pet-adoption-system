@@ -15,6 +15,15 @@ class Pet extends Model
         'color',
         'gender',
         'type',
+        'age',
+        'medical_history',
+        'temperament',
         'photo_path',
+        'status',
     ];
+
+    public function adoptionApplications()
+    {
+        return $this->hasMany(AdoptionApplication::class);
+    }
 }
