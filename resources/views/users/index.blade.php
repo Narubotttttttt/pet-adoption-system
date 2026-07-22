@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
-        <aside class="w-full lg:w-72 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 shrink-0">
+        <aside class="hidden">
             <div class="px-6 py-8">
                 <div class="flex items-center gap-3 mb-10">
                     <img src="{{ asset('images/caws-logo.jpg') }}" alt="CAWS Logo" class="w-10 h-10 rounded-xl object-cover border border-gray-200">

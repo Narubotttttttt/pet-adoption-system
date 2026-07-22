@@ -17,6 +17,7 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-50">
             @include('layouts.navigation')
+            <x-sidebar />
 
             <!-- Page Heading -->
             @isset($header)
@@ -28,7 +29,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="lg:pl-20">
                 {{ $slot }}
             </main>
         </div>

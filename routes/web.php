@@ -8,13 +8,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pets', [PetController::class, 'index'])->name('pets.index');
-    Route::get('/pets/{pet}/apply', [\App\Http\Controllers\AdoptionApplicationController::class, 'create'])->name('adoption-applications.create')->whereNumber('pet');
-    Route::post('/pets/{pet}/apply', [\App\Http\Controllers\AdoptionApplicationController::class, 'store'])->name('adoption-applications.store')->whereNumber('pet');
     Route::get('/pets/{pet}', [PetController::class, 'show'])->name('pets.show')->whereNumber('pet');
 });
 

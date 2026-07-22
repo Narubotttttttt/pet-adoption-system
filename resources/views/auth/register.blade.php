@@ -57,14 +57,10 @@
                         <input id="password_confirmation" name="password_confirmation" type="password" required
                             class="w-full px-4 py-3 bg-[#0f172a] text-white rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-150">
                     </div>
-                </div>
+                </div> <!-- <-- Fixed: Properly closed the grid-cols-2 div here -->
 
-                <!-- Bottom Actions Section -->
-                <div class="flex items-center justify-between pt-4">
-                    <a href="{{ route('login') }}" class="text-sm font-medium text-[#64748b] hover:text-teal-600 transition duration-150">
-                        Already registered? Sign in
-                    </a>
-
+                <!-- Submit Button Container -->
+                <div class="flex justify-center w-full pt-2">
                     <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-md shadow-teal-600/20 active:scale-95 transition duration-150">
                         Create Account
                     </button>
